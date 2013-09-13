@@ -18,7 +18,7 @@ Debug_HackerConsole_Main::out("Usual message");
 
 $arr_ident=array(
 			'executor_id'=>115544,
-			'max_time'=>60,
+			'max_time'=>10,
 			);
 
 //Для загрузчиков прокси, если нужно загружать страницы
@@ -48,6 +48,8 @@ function myLogger($db, $sql)
 }
 $task_man=new TaskManager_Main($arr_ident);
 $arr_task=$task_man->get_task();
+$arr_agent=$task_man->get_agent_as_array($arr_ident);
+
 
 //$arr_task=get_task($arr_ident);
 while (count($arr_task) > 0) {
@@ -57,14 +59,18 @@ while (count($arr_task) > 0) {
 	echo $task_one['start_function']." rr <br>";
 	
 	if (function_exists($task_one['start_function'])) {
-		$arr_task_ret=$task_one['start_function'](json_decode($task_one['start_param'],true));
+		$arr_task_ret=$task_one['start_function'](json_decode($task_one['start_param'],true),$arr_ident);
+
+		exit;
 	    echo "IMAP functions are available.<br />\n";
 	} else {
 		//Обработка ошибки если нет такой функции
-		$arr_agent=$task_man->get_agent_as_array($arr_ident);
-	    $arr_task_ret['task_history']=date("Y-m-d H:i:s").'Ошибка при запуске обработчика задания не найдена функция\n <br>'.$task_one['task_history'];
+	    $arr_task_ret['task_history']=date("Y-m-d H:i:s").'Ошибка при запуске обработчика задания не найдена функция\n <br>';
 	}
-	$task_man->update_task($arr_task_ret, $arr_task["id"]);
+	$arr_task_ret['task_history']=$arr_task_ret['task_history'].$task_one['task_history'];
+	$task_man->get_task();
+	
+	$task_man->update_task($arr_task_ret, $task_one["id"]);
 }
 	
 	
