@@ -172,7 +172,7 @@ function set_new_task_download_news_rss($arraydata,$arr_ident)
 		'task_comment'=>'create task for start new',
 		'task_type'=> 'db_work',
 		'start_function'=>'set_new_task_download_news_rss',
-		'start_date'=> date('Y-m-j H:i:s',mktime(0, 0, 0, date("m"),   date("d"),   date("Y"), date("H"), date("i")+10)),
+		'start_date'=> date('Y-m-j H:i:s',mktime(0, date("i")+10, 0, date("m"),   date("d"),   date("Y"), date("H"))),
 	);
 	$handler_new_task=new TaskManager_Main($arr_ident);
 	$handler_new_task->set_new_task($arr_task);	
